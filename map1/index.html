@@ -2,14 +2,10 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <title>志賀町トイレ設置マップ</title>
+  <title>志賀町トイレ施設マップ</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-sA+e2aVYRrmrDObHTaCjqDpGOW62f1l1vYypn8+Q10M="
-    crossorigin=""
-  />
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     #map {
       height: 90vh;
@@ -18,345 +14,62 @@
   </style>
 </head>
 <body>
-  <h2>志賀町トイレ設置マップ</h2>
+  <h2>志賀町トイレ施設マップ</h2>
   <div id="map"></div>
 
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-o8MmjU4pd1DBEEvu+9xkYvWYOjph2nQV+Xb2AVgeLLw="
-    crossorigin=""
-  ></script>
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
-    // 地図初期表示設定
-    const map = L.map("map").setView([37.05, 136.75], 13);
+    const map = L.map('map').setView([37.05, 136.75], 12);
 
-    // OpenStreetMap タイルレイヤー追加
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution:
-        '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    // 設置場所データ配列
-    const locations = [
-      {
-        name: "道の駅とぎ海街道",
-        address: "石川県羽咋郡志賀町富来領家町タ2-11",
-        position: "駐車場入口横",
-        lat: 37.140558,
-        lon: 136.725355,
-        maleToilets: 4,
-        femaleToilets: 4,
-        barrierFreeToilets: 2,
-        wheelchair: "有",
-        infantEquip: "無",
-        ostomate: "有",
-      },
-      {
-        name: "高浜バスターミナル",
-        address: "石川県羽咋郡志賀町高浜町ク50-4",
-        position: "待合室横",
-        lat: 37.004365,
-        lon: 136.775708,
-        maleToilets: 5,
-        femaleToilets: 2,
-        barrierFreeToilets: 1,
-        wheelchair: "有",
-        infantEquip: "無",
-        ostomate: "無",
-      },
-      {
-        name: "せせらぎ自然公園",
-        address: "石川県羽咋郡志賀町直海な1",
-        position: "公園内",
-        lat: 37.077178,
-        lon: 136.774429,
-        maleToilets: 3,
-        femaleToilets: 2,
-        barrierFreeToilets: 1,
-        wheelchair: "有",
-        infantEquip: "無",
-        ostomate: "無",
-      },
-      {
-        name: "柴木総合公園",
-        address: "石川県羽咋郡志賀町高浜町ヨ1-1",
-        position: "公園内",
-        lat: 37.009984,
-        lon: 136.776886,
-        maleToilets: 3,
-        femaleToilets: 1,
-        barrierFreeToilets: 1,
-        wheelchair: "有",
-        infantEquip: "有",
-        ostomate: "無",
-      },
-      {
-        name: "みらいとうぶ公園",
-        address: "石川県羽咋郡志賀町福野耕500-1",
-        position: "駐車場付近",
-        lat: 37.002465,
-        lon: 136.78449,
-        maleToilets: 3,
-        femaleToilets: 2,
-        barrierFreeToilets: 1,
-        wheelchair: "有",
-        infantEquip: "有",
-        ostomate: "有",
-      },
-      {
-        name: "志賀ロードパーク",
-        address: "石川県羽咋郡志賀町堀松5-38-11",
-        position: "駐車場付近",
-        lat: 37.031327,
-        lon: 136.780948,
-        maleToilets: 3,
-        femaleToilets: 2,
-        barrierFreeToilets: 1,
-        wheelchair: "有",
-        infantEquip: "無",
-        ostomate: "無",
-      },
-      {
-        name: "巌門クリフパーク（牛下）",
-        address: "石川県羽咋郡志賀町牛下チ6-1",
-        position: "駐車場付近",
-        lat: 37.099246,
-        lon: 136.730677,
-        maleToilets: 3,
-        femaleToilets: 2,
-        barrierFreeToilets: 2,
-        wheelchair: "有",
-        infantEquip: "無",
-        ostomate: "無",
-      },
-      {
-        name: "巌門クリフパーク（巌門）",
-        address: "石川県羽咋郡志賀町牛下ル6-2",
-        position: "駐車場付近",
-        lat: 37.095368,
-        lon: 136.728062,
-        maleToilets: 5,
-        femaleToilets: 4,
-        barrierFreeToilets: 1,
-        wheelchair: "有",
-        infantEquip: "無",
-        ostomate: "無",
-      },
-      {
-        name: "笹波美知の駅",
-        address: "石川県羽咋郡志賀町笹波ス18-1",
-        position: "敷地内",
-        lat: 37.217721,
-        lon: 136.696567,
-        maleToilets: 2,
-        femaleToilets: 2,
-        barrierFreeToilets: 0,
-        wheelchair: "無",
-        infantEquip: "無",
-        ostomate: "無",
-      },
-      {
-        name: "米町休憩所（自転車休憩施設）",
-        address: "石川県羽咋郡志賀町米町タ28-22",
-        position: "敷地内",
-        lat: 37.058105,
-        lon: 136.778501,
-        maleToilets: 4,
-        femaleToilets: 2,
-        barrierFreeToilets: 0,
-        wheelchair: "無",
-        infantEquip: "無",
-        ostomate: "無",
-      },
-      {
-        name: "三明休憩所（自転車休憩施設）",
-        address: "石川県羽咋郡志賀町三明チ47-5",
-        position: "駐車場付近",
-        lat: 37.090173,
-        lon: 136.764902,
-        maleToilets: 4,
-        femaleToilets: 2,
-        barrierFreeToilets: 0,
-        wheelchair: "無",
-        infantEquip: "無",
-        ostomate: "無",
-      },
-      {
-        name: "甘田農村公園",
-        address: "石川県羽咋郡志賀町甘田ロ24-2",
-        position: "公園内",
-        lat: 36.968727,
-        lon: 136.77375,
-        maleToilets: 0,
-        femaleToilets: 0,
-        barrierFreeToilets: 0,
-        wheelchair: "無",
-        infantEquip: "無",
-        ostomate: "無",
-      },
-      {
-        name: "代田農村公園",
-        address: "石川県羽咋郡志賀町代田ル17",
-        position: "公園内",
-        lat: 37.055324,
-        lon: 136.818767,
-        maleToilets: 0,
-        femaleToilets: 0,
-        barrierFreeToilets: 0,
-        wheelchair: "無",
-        infantEquip: "無",
-        ostomate: "無",
-      },
-      {
-        name: "徳田農村公園",
-        address: "石川県羽咋郡志賀町徳田れ20-2",
-        position: "公園内",
-        lat: 37.051313,
-        lon: 136.832427,
-        maleToilets: 0,
-        femaleToilets: 0,
-        barrierFreeToilets: 0,
-        wheelchair: "無",
-        infantEquip: "無",
-        ostomate: "無",
-      },
-      {
-        name: "風戸農村公園",
-        address: "石川県羽咋郡志賀町西海風戸改135",
-        position: "公園内",
-        lat: 37.14137,
-        lon: 136.692811,
-        maleToilets: 0,
-        femaleToilets: 0,
-        barrierFreeToilets: 0,
-        wheelchair: "無",
-        infantEquip: "無",
-        ostomate: "無",
-      },
-      {
-        name: "西浦農村公園",
-        address: "石川県羽咋郡志賀町鹿頭へ144",
-        position: "公園内",
-        lat: 37.181566,
-        lon: 136.680602,
-        maleToilets: 2,
-        femaleToilets: 1,
-        barrierFreeToilets: 0,
-        wheelchair: "無",
-        infantEquip: "無",
-        ostomate: "無"
-      },
-      {
-        name: "滝ノ澗公園",
-        address: "石川県羽咋郡志賀町西海風無ソ65番合併",
-        position: "公園内",
-        lat: 37.141328,
-        lon: 136.685855,
-        maleToilets: 1,
-        femaleToilets: 0,
-        barrierFreeToilets: 0,
-        wheelchair: "無",
-        infantEquip: "無",
-        ostomate: "無"
-      },
-      {
-        name: "増穂浦林間広場管理棟",
-        address: "石川県羽咋郡志賀町富来領家町甲24-1",
-        position: "管理棟内",
-        lat: 37.141892,
-        lon: 136.723356,
-        maleToilets: 2,
-        femaleToilets: 2,
-        barrierFreeToilets: 0,
-        wheelchair: "無",
-        infantEquip: "無",
-        ostomate: "無"
-      },
-      {
-        name: "荒木ケ丘山村広場",
-        address: "石川県羽咋郡志賀町富来地頭町9字-38",
-        position: "広場内",
-        lat: 37.134798,
-        lon: 136.731268,
-        maleToilets: 4,
-        femaleToilets: 3,
-        barrierFreeToilets: 0,
-        wheelchair: "無",
-        infantEquip: "無",
-        ostomate: "無"
-      },
-      {
-        name: "志賀町テニスコート",
-        address: "石川県羽咋郡志賀町矢蔵谷ラ2-82",
-        position: "管理棟横",
-        lat: 37.018146,
-        lon: 136.768038,
-        maleToilets: 3,
-        femaleToilets: 2,
-        barrierFreeToilets: 1,
-        wheelchair: "有",
-        infantEquip: "無",
-        ostomate: "無"
-      },
-      {
-        name: "志賀町陸上競技場",
-        address: "石川県羽咋郡志賀町町ヘ1-1",
-        position: "入口横",
-        lat: 37.023521,
-        lon: 136.762693,
-        maleToilets: 6,
-        femaleToilets: 4,
-        barrierFreeToilets: 1,
-        wheelchair: "有",
-        infantEquip: "有",
-        ostomate: "有"
-      },
-      {
-        name: "ニュースポーツの丘",
-        address: "石川県羽咋郡志賀町字安部屋亥の部",
-        position: "物置横",
-        lat: 37.025476,
-        lon: 136.761076,
-        maleToilets: 2,
-        femaleToilets: 1,
-        barrierFreeToilets: 0,
-        wheelchair: "無",
-        infantEquip: "無",
-        ostomate: "無"
-      },
-      {
-        name: "福浦みなと会館",
-        address: "石川県羽咋郡志賀町福浦港浦42-1",
-        position: "会館内",
-        lat: 37.081454,
-        lon: 136.723837,
-        maleToilets: 4,
-        femaleToilets: 3,
-        barrierFreeToilets: 0,
-        wheelchair: "無",
-        infantEquip: "無",
-        ostomate: "無"
-      }
+    const facilities = [
+      { name: "道の駅とぎ海街道", location: [37.140558, 136.725355], maleToilets: 4, femaleToilets: 4, barrierFree: "有", infantFacility: "無", ostomate: "有", address: "石川県羽咋郡志賀町富来領家町タ2-11 駐車場入口横" },
+      { name: "高浜バスターミナル", location: [37.004365, 136.775708], maleToilets: 5, femaleToilets: 2, barrierFree: "有", infantFacility: "無", ostomate: "無", address: "石川県羽咋郡志賀町高浜町ク50-4 待合室横" },
+      { name: "せせらぎ自然公園", location: [37.077178, 136.774429], maleToilets: 3, femaleToilets: 2, barrierFree: "有", infantFacility: "無", ostomate: "無", address: "石川県羽咋郡志賀町直海な1 公園内" },
+      { name: "柴木総合公園", location: [37.009984, 136.776886], maleToilets: 3, femaleToilets: 1, barrierFree: "有", infantFacility: "有", ostomate: "無", address: "石川県羽咋郡志賀町高浜町ヨ1-1 公園内" },
+      { name: "みらいとうぶ公園", location: [37.002465, 136.78449], maleToilets: 3, femaleToilets: 2, barrierFree: "有", infantFacility: "有", ostomate: "有", address: "石川県羽咋郡志賀町福野耕500-1 駐車場付近" },
+      { name: "志賀ロードパーク", location: [37.031327, 136.780948], maleToilets: 3, femaleToilets: 2, barrierFree: "有", infantFacility: "無", ostomate: "無", address: "石川県羽咋郡志賀町堀松5-38-11 駐車場付近" },
+      { name: "巌門クリフパーク（牛下）", location: [37.099246, 136.730677], maleToilets: 3, femaleToilets: 2, barrierFree: "有", infantFacility: "無", ostomate: "無", address: "石川県羽咋郡志賀町牛下チ6-1 駐車場付近" },
+      { name: "巌門クリフパーク（巌門）", location: [37.095368, 136.728062], maleToilets: 5, femaleToilets: 4, barrierFree: "有", infantFacility: "無", ostomate: "無", address: "石川県羽咋郡志賀町牛下ル6-2 駐車場付近" },
+      { name: "笹波美知の駅", location: [37.217721, 136.696567], maleToilets: 2, femaleToilets: 2, barrierFree: "無", infantFacility: "無", ostomate: "無", address: "石川県羽咋郡志賀町笹波ス18-1 敷地内" },
+      { name: "米町休憩所（自転車休憩施設）", location: [37.058105, 136.778501], maleToilets: 4, femaleToilets: 2, barrierFree: "無", infantFacility: "無", ostomate: "無", address: "石川県羽咋郡志賀町米町タ28-22 敷地内" },
+      { name: "三明休憩所（自転車休憩施設）", location: [37.090173, 136.764902], maleToilets: 4, femaleToilets: 2, barrierFree: "無", infantFacility: "無", ostomate: "無", address: "石川県羽咋郡志賀町三明チ47-5 駐車場付近" },
+      { name: "甘田農村公園", location: [36.968727, 136.77375], maleToilets: 0, femaleToilets: 0, barrierFree: "無", infantFacility: "無", ostomate: "無", address: "石川県羽咋郡志賀町甘田ロ24-2 公園内" },
+      { name: "代田農村公園", location: [37.055324, 136.818767], maleToilets: 0, femaleToilets: 0, barrierFree: "無", infantFacility: "無", ostomate: "無", address: "石川県羽咋郡志賀町代田ル17 公園内" },
+      { name: "徳田農村公園", location: [37.051313, 136.832427], maleToilets: 0, femaleToilets: 0, barrierFree: "無", infantFacility: "無", ostomate: "無", address: "石川県羽咋郡志賀町徳田れ20-2 公園内" },
+      { name: "風戸農村公園", location: [37.14137, 136.692811], maleToilets: 0, femaleToilets: 0, barrierFree: "無", infantFacility: "無", ostomate: "無", address: "石川県羽咋郡志賀町西海風戸改135 公園内" },
+      { name: "西浦農村公園", location: [37.181566, 136.680602], maleToilets: 2, femaleToilets: 1, barrierFree: "無", infantFacility: "無", ostomate: "無", address: "石川県羽咋郡志賀町鹿頭へ144 公園内" },
+      { name: "滝ノ澗公園", location: [37.141328, 136.685855], maleToilets: 1, femaleToilets: 0, barrierFree: "無", infantFacility: "無", ostomate: "無", address: "石川県羽咋郡志賀町西海風無ソ65番合併 公園内" },
+      { name: "増穂浦林間広場管理棟", location: [37.141892, 136.723356], maleToilets: 2, femaleToilets: 2, barrierFree: "無", infantFacility: "無", ostomate: "無", address: "石川県羽咋郡志賀町富来領家町甲24-1 管理棟内" },
+      { name: "荒木ケ丘山村広場", location: [37.134798, 136.731268], maleToilets: 4, femaleToilets: 3, barrierFree: "無", infantFacility: "無", ostomate: "無", address: "石川県羽咋郡志賀町富来地頭町9字-38 広場内" },
+      { name: "志賀町テニスコート", location: [37.018146, 136.768038], maleToilets: 3, femaleToilets: 2, barrierFree: "有", infantFacility: "無", ostomate: "無", address: "石川県羽咋郡志賀町矢蔵谷ラ2-82 管理棟横" },
+      { name: "志賀町陸上競技場", location: [37.023521, 136.762693], maleToilets: 6, femaleToilets: 4, barrierFree: "有", infantFacility: "有", ostomate: "有", address: "石川県羽咋郡志賀町町ヘ1-1 入口横" },
+      { name: "ニュースポーツの丘", location: [37.025476, 136.761076], maleToilets: 2, femaleToilets: 1, barrierFree: "無", infantFacility: "無", ostomate: "無", address: "石川県羽咋郡志賀町字安部屋亥の部 物置横" },
+      { name: "福浦みなと会館", location: [37.081454, 136.723837], maleToilets: 4, femaleToilets: 3, barrierFree: "無", infantFacility: "無", ostomate: "無", address: "石川県羽咋郡志賀町福浦港浦42-1 会館内" }
     ];
 
-    // マーカーを地図に追加してポップアップ設定
-    for (const loc of locations) {
-      const marker = L.marker([loc.lat, loc.lon]).addTo(map);
-
-      const popupContent = `
-        <b>${loc.name}</b><br />
-        <b>所在地:</b> ${loc.address}<br />
-        <b>設置位置:</b> ${loc.position}<br />
-        <b>男性トイレ総数:</b> ${loc.maleToilets}<br />
-        <b>女性トイレ総数:</b> ${loc.femaleToilets}<br />
-        <b>バリアフリートイレ数:</b> ${loc.barrierFreeToilets}<br />
-        <b>車椅子使用者用トイレ有無:</b> ${loc.wheelchair}<br />
-        <b>乳幼児用設備設置トイレ有無:</b> ${loc.infantEquip}<br />
-        <b>オストメイト設置トイレ有無:</b> ${loc.ostomate}
+    function createPopupContent(fac) {
+      return `
+      <b>${fac.name}</b><br />
+      所在地: ${fac.address}<br />
+      男性トイレ総数: ${fac.maleToilets}<br />
+      女性トイレ総数: ${fac.femaleToilets}<br />
+      バリアフリートイレ: ${fac.barrierFree}<br />
+      乳幼児用設備設置トイレ: ${fac.infantFacility}<br />
+      オストメイト設置トイレ: ${fac.ostomate}
       `;
-
-      marker.bindPopup(popupContent);
     }
+
+    facilities.forEach(fac => {
+      L.marker(fac.location)
+        .addTo(map)
+        .bindPopup(createPopupContent(fac));
+    });
   </script>
 </body>
 </html>
