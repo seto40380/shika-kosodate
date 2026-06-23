@@ -1,4 +1,258 @@
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
 body{
-  margin:0;
-  font-family:"Yu Gothic",sans-serif;
+font-family:'Noto Sans JP',sans-serif;
+background:#f8fbf8;
+color:#333;
+line-height:1.7;
+}
+
+.container{
+width:min(1200px,90%);
+margin:auto;
+}
+
+/* ヘッダー */
+
+.header{
+background:#fff;
+position:sticky;
+top:0;
+z-index:999;
+box-shadow:0 2px 15px rgba(0,0,0,.05);
+}
+
+.header .container{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 0;
+}
+
+.logo{
+font-size:1.5rem;
+font-weight:800;
+color:#52b788;
+}
+
+nav{
+display:flex;
+gap:28px;
+}
+
+nav a{
+text-decoration:none;
+color:#444;
+font-weight:600;
+transition:.2s;
+}
+
+nav a:hover
+
+/* ヒーロー */
+
+.hero{
+background:
+linear-gradient(
+180deg,
+#fff9db 0%,
+#e8f8ea 100%
+);
+
+padding:90px 0;
+}
+
+.hero-inner{
+display:grid;
+grid-template-columns:1.2fr 1fr;
+gap:40px;
+align-items:center;
+}
+
+.tag{
+display:inline-block;
+background:#fff;
+color:#52b788;
+padding:10px 18px;
+border-radius:999px;
+font-weight:700;
+margin-bottom:20px;
+}
+
+.hero h1{
+font-size:4rem;
+line-height:1.2;
+margin-bottom:20px;
+}
+
+.hero p{
+font-size:1.2rem;
+color:#666;
+margin-bottom:30px;
+}
+
+.family{
+font-size:9rem;
+text-align:center;
+
+background:#fff;
+
+border-radius:40px;
+
+padding:40px;
+
+box-shadow:
+0 15px 40px rgba(0,0,0,.08);
+}
+
+/* ボタン */
+
+.buttons{
+display:flex;
+gap:15px;
+}
+
+.btn{
+text-decoration:none;
+color:#fff;
+
+background:#52b788;
+
+padding:15px 28px;
+
+border-radius:999px;
+
+font-weight:700;
+
+transition:
+transform .15s,
+box-shadow .15s;
+
+box-shadow:
+0 8px 20px rgba(82,183,136,.3);
+}
+
+.btn:hover{
+transform:translateY(-4px);
+}
+
+.btn:active{
+transform:translateY(3px);
+}
+
+.btn-sub{
+background:#ffb703;
+}
+
+/* セクション */
+
+section{
+padding:80px 0;
+}
+
+h2{
+margin-bottom:25px;
+font-size:2rem;
+}
+
+/* カード */
+
+.card-grid{
+display:grid;
+grid-template-columns:
+repeat(auto-fit,minmax(180px,1fr));
+
+gap:20px;
+}
+
+.card{
+background:#fff;
+
+border-radius:24px;
+
+padding:30px;
+
+text-align:center;
+
+font-weight:700;
+
+cursor:pointer;
+
+transition:.2s;
+
+box-shadow:
+0 8px 20px rgba(0,0,0,.06);
+}
+
+.card:hover{
+transform:translateY(-8px);
+}
+
+.card:active{
+transform:translateY(4px);
+}
+
+/* 年齢 */
+
+.age-grid{
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(220px,1fr));
+
+gap:25px;
+}
+
+.age-card{
+
+background:#fff;
+
+padding:35px;
+
+text-align:center;
+
+border-radius:28px;
+
+font-size:3rem;
+
+transition:.2s;
+
+box-shadow:
+0 8px 20px rgba(0,0,0,.06);
+}
+
+.age-card h3{
+margin-top:15px;
+font-size:1.1rem;
+}
+
+.age-card:hover{
+transform:translateY(-8px);
+}
+
+/* スマホ */
+
+@media(max-width:900px){
+
+.hero-inner{
+grid-template-columns:1fr;
+}
+
+.hero h1{
+font-size:2.7rem;
+}
+
+.family{
+font-size:6rem;
+}
+
+nav{
+display:none;
+}
+
 }
