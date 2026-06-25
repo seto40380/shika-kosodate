@@ -1,1 +1,56 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
+body {
+    font-family: "Yu Gothic", sans-serif;
+    background-color: #f7faf7;
+    color: #333;
+    line-height: 1.6;
+}
+
+header {
+    background: linear-gradient(135deg, #9ad8b6, #bfe8d0);
+    color: white;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+header h1 {
+    font-size: 2rem;
+}
+
+main {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+section h2 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+a {
+    display: block;
+    text-decoration: none;
+    background: white;
+    color: #333;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    transition: all 0.2s ease;
+    font-size: 1.1rem;
+}
+
+a:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+}
+
+a:active {
+    transform: translateY(2px);
+}
