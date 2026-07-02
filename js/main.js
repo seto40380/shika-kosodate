@@ -100,7 +100,7 @@ function render() {
   countBox.textContent = `表示：${shown.toLocaleString()}件 / 全${allData.length.toLocaleString()}件`;
 }
 
-fetch("data/shika_suiri_complete.json")
+fetch("data/suiri.json")
   .then(res => {
     if (!res.ok) throw new Error("JSONを読み込めません");
     return res.json();
