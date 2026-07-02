@@ -1,1 +1,96 @@
+* {
+  box-sizing: border-box;
+}
 
+body {
+  margin: 0;
+  font-family: "Noto Sans JP", sans-serif;
+  background: #f5f7f4;
+  color: #1f2d1f;
+}
+
+.app-header {
+  height: 72px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: #0f5c3a;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  z-index: 1000;
+  position: relative;
+}
+
+.logo {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+  background: white;
+  border-radius: 50%;
+  padding: 4px;
+}
+
+.app-header h1 {
+  font-size: 18px;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.app-header p {
+  font-size: 12px;
+  margin: 4px 0 0;
+  opacity: 0.9;
+}
+
+#map {
+  width: 100%;
+  height: calc(100vh - 72px);
+}
+
+.legend {
+  position: fixed;
+  bottom: 18px;
+  left: 12px;
+  z-index: 999;
+  background: white;
+  padding: 10px 12px;
+  border-radius: 14px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.25);
+  font-size: 13px;
+}
+
+.legend div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0;
+}
+
+.legend img {
+  width: 22px;
+  height: 22px;
+}
+
+.popup-title {
+  font-weight: bold;
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+
+.popup-info {
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.nav-button {
+  display: block;
+  margin-top: 10px;
+  padding: 9px 12px;
+  background: #0f5c3a;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 10px;
+  font-weight: bold;
+}
