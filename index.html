@@ -1,34 +1,62 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>志賀町 消防水利マップ</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
-  <link rel="stylesheet" href="css/style.css">
+    <title>志賀町 消防水利マップ</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+    <!-- 自分のCSS -->
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-  <header class="app-header">
-    <img src="images/logo.png" alt="志賀町 町章" class="logo">
-    <div>
-      <h1>志賀町 消防水利マップ</h1>
-      <p>消火栓・防火水槽を確認できます</p>
+
+    <!-- ヘッダー -->
+    <header class="app-header">
+        <img src="images/logo.png"
+             alt="志賀町ロゴ"
+             class="logo">
+
+        <div>
+            <h1>志賀町 消防水利マップ</h1>
+            <p>消火栓・防火水槽を確認できます</p>
+        </div>
+    </header>
+
+    <!-- 地図表示 -->
+    <main>
+        <div id="map"></div>
+    </main>
+
+    <!-- 凡例 -->
+    <div class="legend">
+        <div>
+            <img src="images/hydrant.png">
+            消火栓
+        </div>
+
+        <div>
+            <img src="images/tank.png">
+            防火水槽
+        </div>
     </div>
-  </header>
 
-  <main>
-    <div id="map"></div>
-  </main>
 
-  <div class="legend">
-    <div><img src="images/hydrant.png"> 消火栓</div>
-    <div><img src="images/tank.png"> 防火水槽</div>
-  </div>
+    <!-- ↓↓↓ この3つが超重要 ↓↓↓ -->
 
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script src="js/main.js"></script>
+    <!-- Leaflet -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <!-- CSVを読み込むためのライブラリ -->
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+    <!-- 自分のJavaScript -->
+    <script src="js/main.js"></script>
+
 </body>
 </html>
