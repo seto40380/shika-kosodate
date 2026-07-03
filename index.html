@@ -1,56 +1,72 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>志賀町 消防水利マップ</title>
+    <title>志賀町 消防水利マップ</title>
 
-  <!-- Leaflet CSS -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  />
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-  <!-- 自分のCSS -->
-  <link rel="stylesheet" href="css/style.css" />
+    <!-- 自分のCSS -->
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-  <header class="app-header">
-    <div class="header-left">
-      <img src="images/logo.png" alt="志賀町 町章" class="logo" />
 
-      <div class="header-text">
-        <h1>志賀町 消防水利マップ</h1>
-        <p>消火栓・防火水槽を確認できます</p>
-      </div>
+    <!-- ヘッダー -->
+    <header class="app-header">
+
+        <div class="header-left">
+
+            <img src="images/logo.png"
+                alt="志賀町町章"
+                class="logo">
+
+            <div class="header-text">
+                <h1>志賀町 消防水利マップ</h1>
+                <p>消火栓・防火水槽を確認できます</p>
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- 地図 -->
+    <main class="app-main">
+        <div id="map"></div>
+    </main>
+
+
+    <!-- 凡例 -->
+    <div class="legend">
+
+        <div class="legend-item">
+            <img src="images/hydrant.svg" alt="消火栓">
+            <span>消火栓</span>
+        </div>
+
+        <div class="legend-item">
+            <img src="images/tank.svg" alt="防火水槽">
+            <span>防火水槽</span>
+        </div>
+
     </div>
-  </header>
 
-  <main class="app-main">
-    <div id="map"></div>
-  </main>
 
-  <div class="legend">
-    <div class="legend-item">
-      <img src="images/hydrant.svg" alt="消火栓" />
-      <span>消火栓</span>
-    </div>
+    <!-- Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <div class="legend-item">
-      <img src="images/tank.svg" alt="防火水槽" />
-      <span>防火水槽</span>
-    </div>
-  </div>
+    <!-- CSV読込ライブラリ -->
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 
-  <!-- Leaflet -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- JavaScript -->
+    <script src="js/main.js"></script>
 
-  <!-- CSV読み込み用 -->
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-
-  <!-- 自分のJavaScript -->
-  <script src="js/main.js"></script>
 </body>
+
 </html>
