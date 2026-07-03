@@ -1,19 +1,16 @@
-// ==========================
-// 志賀町 消防水利マップ
-// main.js
-// CSVファイル：data/2115.csv
-// ==========================
-
-// 地図を表示
+// 地図初期位置（志賀町役場付近）
 const map = L.map("map").setView([37.006, 136.778], 11);
 
-// 地図タイル
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  maxZoom: 19,
-  attribution: "© OpenStreetMap contributors"
-}).addTo(map);
+// 地図表示
+L.tileLayer(
+  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+  {
+    maxZoom: 19,
+    attribution: "© OpenStreetMap contributors"
+  }
+).addTo(map);
 
-// アイコン：消火栓
+// 消火栓アイコン
 const hydrantIcon = L.icon({
   iconUrl: "images/hydrant.svg",
   iconSize: [36, 36],
@@ -21,7 +18,7 @@ const hydrantIcon = L.icon({
   popupAnchor: [0, -32]
 });
 
-// アイコン：防火水槽
+// 防火水槽アイコン
 const tankIcon = L.icon({
   iconUrl: "images/tank.svg",
   iconSize: [36, 36],
@@ -29,57 +26,68 @@ const tankIcon = L.icon({
   popupAnchor: [0, -32]
 });
 
-// CSV読み込み
+// CSV読込
 Papa.parse("data/2115.csv", {
+
   download: true,
+
   header: true,
+
   skipEmptyLines: true,
+
   encoding: "Shift_JIS",
 
-  complete: function (results) {
-    console.log("CSV読み込み完了", results.data);
+  complete: function(results) {
 
-    results.data.forEach(function (item) {
+    console.log("CSV読込完了");
+
+    results.data.forEach(item => {
+
       const lat = parseFloat(item["緯度"]);
       const lng = parseFloat(item["経度"]);
 
-      if (isNaN(lat) || isNaN(lng)) {
-        return;
-      }
+      // 緯度経度がなければスキップ
+      if (isNaN(lat) || isNaN(lng)) return;
 
-      const type = item["種別"] || "不明";
-      const address = item["所在地_連結標記"] || "所在地不明";
-      const diameter = item["口径"] || "-";
-      const id = item["ID"] || "-";
-      const note = item["備考"] || "-";
+      // アイコン切替
+      const icon =
+        item["種別"] === "消火栓"
+          ? hydrantIcon
+          : tankIcon;
 
-      const icon = type.includes("防火") ? tankIcon : hydrantIcon;
-
+      // Googleマップナビ
       const googleUrl =
         `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
 
-      const popupHtml = `
-        <div class="popup-content">
-          <div class="popup-title">${type}</div>
-          <div><b>所在地</b><br>${address}</div>
-          <div><b>口径</b>：${diameter}</div>
-          <div><b>ID</b>：${id}</div>
-          <div><b>備考</b>：${note}</div>
-          <br>
-          <a class="nav-button" href="${googleUrl}" target="_blank">
-            📍 ここに行く
-          </a>
-        </div>
+      // ポップアップ
+      const popup = `
+        <b>${item["種別"]}</b><br>
+        ${item["所在地_連結標記"] || ""}<br>
+        口径：${item["口径"] || "-"}<br>
+        ID：${item["ID"] || "-"}<br><br>
+
+        <a href="${googleUrl}" target="_blank">
+          📍ここに行く
+        </a>
       `;
 
-      L.marker([lat, lng], { icon: icon })
+      // マーカー追加
+      L.marker([lat, lng], { icon })
         .addTo(map)
-        .bindPopup(popupHtml);
+        .bindPopup(popup);
+
     });
+
   },
 
-  error: function (error) {
-    console.error("CSV読み込みエラー:", error);
-    alert("CSVの読み込みに失敗しました。data/2115.csv を確認してください。");
+  error: function(error) {
+
+    console.error(error);
+
+    alert(
+      "CSVが読み込めません。\n" +
+      "data/2115.csv を確認してください。"
+    );
   }
+
 });
