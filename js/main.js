@@ -1,7 +1,11 @@
-// 地図初期位置（志賀町役場付近）
+// ======================
+// 志賀町 消防水利マップ
+// ======================
+
+// 地図初期表示（志賀町役場付近）
 const map = L.map("map").setView([37.006, 136.778], 11);
 
-// 地図表示
+// 地図タイル
 L.tileLayer(
   "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
   {
@@ -10,24 +14,29 @@ L.tileLayer(
   }
 ).addTo(map);
 
-// 消火栓アイコン
+// ======================
+// アイコン設定
+// ======================
+
 const hydrantIcon = L.icon({
-  iconUrl: "images/hydrant.svg",
+  iconUrl: "images/hydrant.png",
   iconSize: [36, 36],
   iconAnchor: [18, 36],
   popupAnchor: [0, -32]
 });
 
-// 防火水槽アイコン
 const tankIcon = L.icon({
-  iconUrl: "images/tank.svg",
+  iconUrl: "images/tank.png",
   iconSize: [36, 36],
   iconAnchor: [18, 36],
   popupAnchor: [0, -32]
 });
 
-// CSV読込
-Papa.parse("data/2115.csv", {
+// ======================
+// CSV読み込み
+// ======================
+
+Papa.parse("data/suiri.csv", {
 
   download: true,
 
@@ -37,7 +46,7 @@ Papa.parse("data/2115.csv", {
 
   encoding: "Shift_JIS",
 
-  complete: function(results) {
+  complete: function (results) {
 
     console.log("CSV読込完了");
 
@@ -49,32 +58,54 @@ Papa.parse("data/2115.csv", {
       // 緯度経度がなければスキップ
       if (isNaN(lat) || isNaN(lng)) return;
 
-      // アイコン切替
+      const type = item["種別"] || "不明";
+
       const icon =
-        item["種別"] === "消火栓"
+        type === "消火栓"
           ? hydrantIcon
           : tankIcon;
 
-      // Googleマップナビ
+      const address =
+        item["所在地_連結標記"] || "住所情報なし";
+
+      const diameter =
+        item["口径"] || "-";
+
+      const note =
+        item["備考"] || "-";
+
       const googleUrl =
         `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
 
-      // ポップアップ
-      const popup = `
-        <b>${item["種別"]}</b><br>
-        ${item["所在地_連結標記"] || ""}<br>
-        口径：${item["口径"] || "-"}<br>
-        ID：${item["ID"] || "-"}<br><br>
+      const popupHtml = `
+        <div class="popup-content">
 
-        <a href="${googleUrl}" target="_blank">
-          📍ここに行く
-        </a>
+          <div class="popup-title">
+            ${type}
+          </div>
+
+          <div><b>所在地</b><br>${address}</div>
+
+          <div><b>口径</b>：${diameter}</div>
+
+          <div><b>ID</b>：${item["ID"] || "-"}</div>
+
+          <div><b>備考</b>：${note}</div>
+
+          <a class="nav-button"
+             href="${googleUrl}"
+             target="_blank">
+
+             📍ここに行く
+
+          </a>
+
+        </div>
       `;
 
-      // マーカー追加
       L.marker([lat, lng], { icon })
         .addTo(map)
-        .bindPopup(popup);
+        .bindPopup(popupHtml);
 
     });
 
@@ -82,11 +113,11 @@ Papa.parse("data/2115.csv", {
 
   error: function(error) {
 
-    console.error(error);
+    console.error("CSV読込エラー", error);
 
     alert(
-      "CSVが読み込めません。\n" +
-      "data/2115.csv を確認してください。"
+      "CSVの読み込みに失敗しました。\n" +
+      "data/suiri.csv を確認してください。"
     );
   }
 
