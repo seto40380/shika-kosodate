@@ -1,16 +1,17 @@
 // ======================
 // 志賀町 消防水利マップ
-// CSV / JSON 両対応版
-// data/suiri.csv を読む
+// data/suiri.csv
+// CSVの列順で読む確実版
 // ======================
 
-const map = L.map("map").setView([37.006, 136.778], 11);
+const map = L.map("map").setView([37.06, 136.78], 11);
 
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19,
   attribution: "© OpenStreetMap contributors"
 }).addTo(map);
 
+// 消火栓アイコン
 const hydrantIcon = L.icon({
   iconUrl: "images/hydrant.png",
   iconSize: [36, 36],
@@ -18,6 +19,7 @@ const hydrantIcon = L.icon({
   popupAnchor: [0, -32]
 });
 
+// 防火水槽アイコン
 const tankIcon = L.icon({
   iconUrl: "images/tank.png",
   iconSize: [36, 36],
@@ -37,7 +39,7 @@ statusBox.onAdd = function () {
   div.style.boxShadow = "0 2px 8px rgba(0,0,0,.25)";
   div.style.fontSize = "13px";
   div.style.maxWidth = "300px";
-  div.innerHTML = "データ読込中...";
+  div.innerHTML = "CSV読込中...";
   return div;
 };
 
@@ -58,121 +60,46 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
-function cleanKey(key) {
-  return String(key || "")
-    .replace(/^\uFEFF/, "")
-    .replace(/\s/g, "")
-    .trim();
-}
+// CSV読み込み
+Papa.parse("data/suiri.csv", {
+  download: true,
+  header: false,
+  skipEmptyLines: true,
 
-function cleanRow(row) {
-  const newRow = {};
-  Object.keys(row).forEach(key => {
-    newRow[cleanKey(key)] = row[key];
-  });
-  return newRow;
-}
-
-function findColumn(columns, names) {
-  for (const name of names) {
-    const found = columns.find(col => cleanKey(col).includes(name));
-    if (found) return cleanKey(found);
-  }
-  return null;
-}
-
-function parseDataFromText(text) {
-  const trimmed = text.trim();
-
-  // JSONだった場合
-  if (trimmed.startsWith("[") || trimmed.startsWith("{")) {
-    const json = JSON.parse(trimmed);
-    const rows = Array.isArray(json) ? json : json.data;
-    return {
-      type: "JSON",
-      rows: rows.map(cleanRow)
-    };
-  }
-
-  // CSVだった場合
-  const parsed = Papa.parse(text, {
-    header: true,
-    skipEmptyLines: true
-  });
-
-  return {
-    type: "CSV",
-    rows: parsed.data.map(cleanRow)
-  };
-}
-
-fetch("data/suiri.csv")
-  .then(response => {
-    if (!response.ok) {
-      throw new Error("data/suiri.csv が見つかりません");
-    }
-    return response.arrayBuffer();
-  })
-  .then(buffer => {
-    let result;
-    let encoding = "UTF-8";
-
-    // まずUTF-8で読む
-    try {
-      const utf8Text = new TextDecoder("utf-8").decode(buffer);
-      result = parseDataFromText(utf8Text);
-    } catch (e) {
-      // ダメならShift-JISで読む
-      const sjisText = new TextDecoder("shift_jis").decode(buffer);
-      result = parseDataFromText(sjisText);
-      encoding = "Shift-JIS";
-    }
-
-    const rows = result.rows || [];
-    const columns = rows.length > 0 ? Object.keys(rows[0]) : [];
-
-    console.log("形式:", result.type);
-    console.log("文字コード:", encoding);
-    console.log("列名:", columns);
-    console.log("先頭データ:", rows[0]);
-
-    const latCol = findColumn(columns, ["緯度", "lat", "latitude"]);
-    const lngCol = findColumn(columns, ["経度", "lng", "lon", "longitude"]);
-
-    const typeCol = findColumn(columns, ["種別", "水利種別"]);
-    const addressCol = findColumn(columns, ["所在地_連結標記", "所在地", "住所"]);
-    const diameterCol = findColumn(columns, ["口径"]);
-    const idCol = findColumn(columns, ["ID", "id"]);
-    const noteCol = findColumn(columns, ["備考"]);
-
-    if (!latCol || !lngCol) {
-      setStatus(
-        "緯度・経度の列が見つかりません。<br><br>" +
-        "形式：" + result.type + "<br>" +
-        "文字コード：" + encoding + "<br><br>" +
-        "列名：<br>" + columns.join("<br>")
-      );
-      return;
-    }
+  complete: function (results) {
+    const rows = results.data;
 
     let markerCount = 0;
     const bounds = [];
 
-    rows.forEach(item => {
-      const lat = parseFloat(item[latCol]);
-      const lng = parseFloat(item[lngCol]);
+    rows.forEach(function (row, index) {
 
-      if (isNaN(lat) || isNaN(lng)) return;
+      // 1行目が見出し行なら飛ばす
+      if (index === 0 && row[12] === "緯度") {
+        return;
+      }
+
+      // CSVの列順で取得
+      const code = row[0];
+      const id = row[1];
+      const type = row[4];
+      const address = row[6];
+      const lat = Number(row[12]); // 緯度
+      const lng = Number(row[13]); // 経度
+      const diameter = row[14];
+      const note = row[15];
+
+      // 緯度・経度が数字でなければ飛ばす
+      if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+        return;
+      }
 
       markerCount++;
+      bounds.push([lat, lng]);
 
-      const type = typeCol ? item[typeCol] || "不明" : "不明";
-      const address = addressCol ? item[addressCol] || "住所情報なし" : "住所情報なし";
-      const diameter = diameterCol ? item[diameterCol] || "-" : "-";
-      const id = idCol ? item[idCol] || "-" : "-";
-      const note = noteCol ? item[noteCol] || "-" : "-";
-
-      const icon = String(type).includes("防火") ? tankIcon : hydrantIcon;
+      const icon = String(type).includes("防火")
+        ? tankIcon
+        : hydrantIcon;
 
       const googleUrl =
         `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
@@ -181,10 +108,14 @@ fetch("data/suiri.csv")
         <div class="popup-content">
           <div class="popup-title">${escapeHtml(type)}</div>
 
-          <div><b>所在地</b><br>${escapeHtml(address)}</div>
-          <div><b>口径</b>：${escapeHtml(diameter)}</div>
-          <div><b>ID</b>：${escapeHtml(id)}</div>
-          <div><b>備考</b>：${escapeHtml(note)}</div>
+          <div>
+            <b>所在地</b><br>
+            ${escapeHtml(address)}
+          </div>
+
+          <div><b>口径</b>：${escapeHtml(diameter || "-")}</div>
+          <div><b>ID</b>：${escapeHtml(id || "-")}</div>
+          <div><b>備考</b>：${escapeHtml(note || "-")}</div>
 
           <a class="nav-button"
              href="${googleUrl}"
@@ -198,16 +129,12 @@ fetch("data/suiri.csv")
       L.marker([lat, lng], { icon })
         .addTo(map)
         .bindPopup(popupHtml);
-
-      bounds.push([lat, lng]);
     });
 
     if (markerCount > 0) {
       setStatus(
-        "読込成功<br>" +
-        "形式：" + result.type + "<br>" +
-        "文字コード：" + encoding + "<br>" +
-        "マーカー数：" + markerCount + "件"
+        `CSV読込成功<br>` +
+        `マーカー数：${markerCount}件`
       );
 
       map.fitBounds(bounds, {
@@ -215,16 +142,22 @@ fetch("data/suiri.csv")
       });
     } else {
       setStatus(
-        "読めたけどマーカー0件<br>" +
-        "形式：" + result.type + "<br>" +
-        "文字コード：" + encoding + "<br>" +
-        "緯度列：" + latCol + "<br>" +
-        "経度列：" + lngCol
+        `CSVは読めたけどマーカー0件<br><br>` +
+        `12列目：緯度<br>` +
+        `13列目：経度<br>` +
+        `として読み取り中`
       );
     }
-  })
-  .catch(error => {
-    console.error(error);
-    setStatus("エラー：" + error.message);
-    alert(error.message);
-  });
+
+    console.log("CSV行数", rows.length);
+    console.log("マーカー数", markerCount);
+    console.log("先頭行", rows[0]);
+    console.log("2行目", rows[1]);
+  },
+
+  error: function (error) {
+    console.error("CSV読込エラー", error);
+    setStatus("CSV読込エラー");
+    alert("data/suiri.csv が読み込めません。");
+  }
+});
